@@ -3,4 +3,4 @@
 Some practice code about machine learning.
 
 ## Index
-- Preceptron
+- Perceptron
