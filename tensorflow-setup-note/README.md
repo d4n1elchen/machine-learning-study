@@ -52,7 +52,7 @@ Add the following line to your `.zshrc` or `.bashrc`
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/cuda/lib64"
 ```
 
-## Install Anaconda
+## Install TensorFlow in Anaconda
 
 Ref: [Installing TensorFlow on Ubuntu](https://www.tensorflow.org/install/install_linux)
 
@@ -76,7 +76,15 @@ conda create -n tensorflow python=3.6
 source activate tensorflow
 ```
 
-### Install Tensorflow
+To deactivate conda enviroment
+
+```bash
+source deactivate
+```
+
+### Install TensorFlow
+
+Make sure your conda enviroment activated first, then run following command to install TensorFlow
 
 ```bash
 pip install --ignore-installed --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.4.0-cp36-cp36m-linux_x86_64.whl
@@ -99,3 +107,4 @@ The expected output should be
 ```
 Hello, TensorFlow!
 ```
+
