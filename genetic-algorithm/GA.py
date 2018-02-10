@@ -142,11 +142,11 @@ class numGA(GA):
 
     def run(self, prnt=False):
         for i in range(self.max_gen):
-            offspring = self.Crossover(self.population)
+            selection = self.Selection(self.population)
+            offspring = self.Crossover(selection)
             mutation = self.Mutation(offspring)
-            selection = self.Selection(mutation)
 
-            self.population = selection
+            self.population = mutation
             self.output(prnt)
 
     def initPopulation(self, size_p):
@@ -196,7 +196,7 @@ class numGA(GA):
             print(self.global_max_curr)
 
 if __name__ == "__main__":
-    ga = numGA(100, 0.01, 1000) # population_size, probability_mutation, max_generation
+    ga = numGA(100, 0.02, 1000) # population_size, probability_mutation, max_generation
     ga.run(prnt=True)
 
     print("The best solution of this run is {}, at {}".format(ga.global_max_curr, ga.solution))
