@@ -142,11 +142,11 @@ class numGA(GA):
 
     def run(self, prnt=False):
         for i in range(self.max_gen):
-            offspring = self.Crossover(self.population)
+            selection = self.Selection(self.population)
+            offspring = self.Crossover(selection)
             mutation = self.Mutation(offspring)
-            selection = self.Selection(mutation)
 
-            self.population = selection
+            self.population = mutation
             self.output(prnt)
 
     def initPopulation(self, size_p):
