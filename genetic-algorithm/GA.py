@@ -196,7 +196,7 @@ class numGA(GA):
             print(self.global_max_curr)
 
 if __name__ == "__main__":
-    ga = numGA(100, 0.01, 1000) # population_size, probability_mutation, max_generation
+    ga = numGA(100, 0.02, 1000) # population_size, probability_mutation, max_generation
     ga.run(prnt=True)
 
     print("The best solution of this run is {}, at {}".format(ga.global_max_curr, ga.solution))
