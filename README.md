@@ -2,8 +2,24 @@
 
 Some practice code about machine learning.
 
-## Index
-- Perceptron
-  - A perceptron implementation and visualization using numpy and matplotlib.
-- TensorFlow setup note
-  - Note for install TensorFlow on Ubuntu 17.10
+## Director structure
+```
+.
+├── datasets
+│   ├── MNIST_data
+│   └── school-activities
+├── paper-list
+├── pytorch
+│   ├── CIFAR10
+│   ├── reinforcement-learning
+│   └── transfer-learning
+├── tensorflow
+│   ├── hourglass
+│   ├── linear-model
+│   ├── MNIST
+│   ├── reinforcement-learning
+│   └── testing-codes
+└── vanilla
+    ├── genetic-algorithm
+    └── perceptron
+```
