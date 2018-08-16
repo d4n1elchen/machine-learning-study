@@ -62,7 +62,6 @@ for i in range(epoch):
 
     ## loss function
     loss = cross_entropy(out, y)
-    print(loss.mean())
 
     ## back propagation
     dl2 = (out - y)                                        # dJ/dl2 = dJ/do  * do/dl2 (l2 = l1 * W2 + b2)
@@ -79,3 +78,24 @@ for i in range(epoch):
     b2 = b2 - learning_rate * db2
     W1 = W1 - learning_rate * dW1
     b1 = b1 - learning_rate * db1
+
+print(loss.mean())
+
+def predict(x):
+    x = np.array(x)[np.newaxis, :]
+
+    ## feed forward
+    l1 = sigmoid(np.matmul(x, W1) + b1)
+    l2 = np.matmul(l1, W2) + b2
+
+    ## Softmax
+    out = softmax(l2)
+
+    ## argmax
+    idx = np.argmax(out, axis=1)
+
+    return idx + 1
+
+print("[0, 1, 0] ->", predict([0, 1, 0]))
+print("[1, 0, 1] ->", predict([1, 0, 1]))
+print("[1, 1, 1] ->", predict([1, 1, 1]))

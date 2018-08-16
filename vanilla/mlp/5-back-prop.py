@@ -52,16 +52,17 @@ out = softmax(l2)
 loss = cross_entropy(out, y)
 
 ## back propagation
-da2 = (out - y) * (l2 * (1 - l2))                      # dJ/da2 = dJ/dl2 * dl2/da2 (a2 = l1 * W2 + b2)
-dW2 = np.matmul(l1.T, da2) / batch_size                # dJ/dW2 = dJ/da2 * da2/dW2
-db2 = np.matmul(np.ones(batch_size), da2) / batch_size # dJ/db2 = dJ/da2 * da2/db2
+dl2 = (out - y)                                        # dJ/dl2 = dJ/do  * do/dl2 (l2 = l1 * W2 + b2)
+dW2 = np.matmul(l1.T, dl2) / batch_size                # dJ/dW2 = dJ/dl2 * dl2/dW2
+db2 = np.matmul(np.ones(batch_size), dl2) / batch_size # dJ/db2 = dJ/dl2 * dl2/db2
 
-da1 = np.matmul(W2, da2.T) * (l1 * (1 - l1))           # dJ/da1 = dJ/da2 * da2/dl1 * dl1/da1 (a1 = X * W1 + b1)
+dl1 = np.matmul(dl2, W2.T)                             # dJ/dl1 = dJ/dl2 * dl2/dl1 (l1 = sigmoid(a1))
+da1 = dl1 * (l1 * (1 - l1))                            # dJ/da1 = dJ/dl1 * dl1/da1 (a1 = X * W1 + b1)
 dW1 = np.matmul(X.T, da1) / batch_size                 # dJ/dW1 = dJ/da1 * da1/dW1
 db1 = np.matmul(np.ones(batch_size), da1) / batch_size # dJ/db1 = dJ/da1 * da1/db1
 
 ## gradient descent
-W2 = W2 - learning_rate * dW2
+W2 = W2 - learning_rate * dW2 # w = w - r * dw
 b2 = b2 - learning_rate * db2
 W1 = W1 - learning_rate * dW1
 b1 = b1 - learning_rate * db1
