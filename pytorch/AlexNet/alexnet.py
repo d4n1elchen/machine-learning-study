@@ -127,7 +127,7 @@ if is_gpu:
     criterion.to(device)
     
 #%% Training
-epochs = 5
+epochs = 200
 
 batch_time = AverageMeter()
 data_time = AverageMeter()
