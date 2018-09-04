@@ -89,6 +89,34 @@ def accuracy(output, target, topk=(1,)):
             res.append(correct_k.mul_(100.0 / batch_size))
         return res
 
+def validate(val_loader, model, criterion, is_gpu):
+    losses = AverageMeter()
+    top1 = AverageMeter()
+    top5 = AverageMeter()
+
+    # switch to evaluate mode
+    model.eval()
+
+    with torch.no_grad():
+        for i, (input, target) in enumerate(val_loader):
+            if is_gpu:
+                input, target = input.to(device), target.to(device)
+
+            # compute output
+            output = model(input)
+            loss = criterion(output, target)
+
+            # measure accuracy and record loss
+            prec1, prec5 = accuracy(output, target, topk=(1, 5))
+            losses.update(loss.item(), input.size(0))
+            top1.update(prec1[0], input.size(0))
+            top5.update(prec5[0], input.size(0))
+
+        print(' * Prec@1 {top1.avg:.3f} Prec@5 {top5.avg:.3f}'
+              .format(top1=top1, top5=top5))
+
+    return top1.avg
+
 class AverageMeter(object):
     """Computes and stores the average and current value"""
     def __init__(self):
@@ -108,7 +136,7 @@ class AverageMeter(object):
         
 def adjust_learning_rate(optimizer, epoch):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
-    lr = args.lr * (0.1 ** (epoch // 30))
+    lr = 0.1 * (0.1 ** (epoch // 30))
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
@@ -128,17 +156,18 @@ if is_gpu:
     
 #%% Training
 epochs = 200
-
-batch_time = AverageMeter()
-data_time = AverageMeter()
-losses = AverageMeter()
-top1 = AverageMeter()
-top5 = AverageMeter()
-
-model.train()
-
-end = time.time()
 for epoch in range(epochs):
+
+    batch_time = AverageMeter()
+    data_time = AverageMeter()
+    losses = AverageMeter()
+    top1 = AverageMeter()
+    top5 = AverageMeter()
+    
+    model.train()
+    
+    end = time.time()
+    
     for i, (input, target) in enumerate(train_loader):
         data_time.update(time.time() - end)
         
@@ -165,7 +194,7 @@ for epoch in range(epochs):
         batch_time.update(time.time() - end)
         end = time.time()
         
-        if i % 100 == 99:
+        if i % 100 == 0:
             print('Epoch: [{0}][{1}/{2}]\t'
                   'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t'
                   'Data {data_time.val:.3f} ({data_time.avg:.3f})\t'
@@ -174,3 +203,5 @@ for epoch in range(epochs):
                   'Prec@5 {top5.val:.3f} ({top5.avg:.3f})'.format(
                    epoch, i, len(train_loader), batch_time=batch_time,
                    data_time=data_time, loss=losses, top1=top1, top5=top5))
+            
+    validate(val_loader, model, criterion, is_gpu)
