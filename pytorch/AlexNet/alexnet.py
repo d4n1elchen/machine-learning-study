@@ -67,7 +67,7 @@ def main():
     val_dataset = datasets.ImageFolder(valdir, augmentation)
 
     ## Prepare dataloader
-    batch_size = 128
+    batch_size = 128    
     train_loader = torch.utils.data.DataLoader(
             train_dataset, batch_size=batch_size, shuffle=True,
             num_workers=4, pin_memory=True)
@@ -101,7 +101,7 @@ def main():
     prev_prec1 = 0
     epochs = 200
     for epoch in range(epochs):
-        train(train_loader, model, criterion, is_gpu, device)
+        train(train_loader, model, criterion, optimizer, is_gpu, device, epoch)
         prec1 = validate(val_loader, model, criterion, is_gpu, device)
 
         impv_prec1 += prec1 - prev_prec1
@@ -112,12 +112,12 @@ def main():
             if impv_prec1 < 1.0:
                 lr /= 10
                 for param_group in optimizer.param_groups:
-                    param_group['lr'] = lrdjust_learning_rate(init_learning_rate, optimizer, epoch)
-            print('EPOCH [{0}], Prec1 imporve: {1:.3f}, lr: {2:.4f}'.format(epoch, impv_prec, lr))
+                    param_group['lr'] = lr
+            print('CHECK_IMPROVE Epoch: {}, Prec1 imporve: {1:.3f}, lr: {2:.4f}'.format(epoch, impv_prec1, lr))
             impv_prec1 = 0
 
 #%% Training
-def train(train_loader, model, criterion, is_gpu, device):
+def train(train_loader, model, criterion, optimizer, is_gpu, device, epoch):
     # Profiler
     batch_time = AverageMeter()
     data_time = AverageMeter()
