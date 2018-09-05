@@ -21,9 +21,11 @@ class AlexNet(nn.Module):
         self.features = nn.Sequential(
             nn.Conv2d(3, 96, kernel_size=11, stride=4, padding=2),
             nn.ReLU(),
+            nn.LocalResponseNorm(),
             nn.MaxPool2d(kernel_size=3, stride=2),
             nn.Conv2d(96, 256, kernel_size=5, padding=2),
             nn.ReLU(),
+            nn.LocalResponseNorm(),
             nn.MaxPool2d(kernel_size=3, stride=2),
             nn.Conv2d(256, 384, kernel_size=3, padding=1),
             nn.ReLU(),
@@ -48,8 +50,6 @@ class AlexNet(nn.Module):
         x = x.view(-1, 256 * 6 * 6)
         x = self.classifier(x)
         return x
-
-#%% Implement intensity transform
 
 #%% Main function
 def main():
