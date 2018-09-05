@@ -49,6 +49,9 @@ class AlexNet(nn.Module):
         x = self.classifier(x)
         return x
 
+#%% Implement intensity transform
+
+#%% Main function
 def main():
     ## Load data
     data_dir = '.\\tiny-imagenet-200'
@@ -56,18 +59,25 @@ def main():
     traindir = os.path.join(data_dir, 'train')
     valdir = os.path.join(data_dir, 'val')
     augmentation = transforms.Compose([
-                       transforms.RandomResizedCrop(224),
-                       transforms.RandomHorizontalFlip(),
-                       transforms.ToTensor(),
-                       transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                            std=[1, 1, 1])
+                        transforms.RandomResizedCrop(224),
+                        transforms.RandomHorizontalFlip(),
+                        transforms.ToTensor(),
+                        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                             std=[1, 1, 1])
+                   ])
+    val_transform = transforms.Compose([
+                        transforms.Resize(256),
+                        transforms.CenterCrop(224),
+                        transforms.ToTensor(),
+                        transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                             std=[1, 1, 1])
                    ])
 
     train_dataset = datasets.ImageFolder(traindir, augmentation)
-    val_dataset = datasets.ImageFolder(valdir, augmentation)
+    val_dataset = datasets.ImageFolder(valdir, val_transform)
 
     ## Prepare dataloader
-    batch_size = 128    
+    batch_size = 128
     train_loader = torch.utils.data.DataLoader(
             train_dataset, batch_size=batch_size, shuffle=True,
             num_workers=4, pin_memory=True)
