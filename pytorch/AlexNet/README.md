@@ -9,6 +9,8 @@ Slide: [AlexNet in PyTorch](https://docs.google.com/presentation/d/1EtflA3HRTNEQ
 
 TODO
 ---
-- Implement LRN
-- Implement intensity augmentation
 - Model saving
+
+Note
+---
+- Intensity augmentation is ignored
