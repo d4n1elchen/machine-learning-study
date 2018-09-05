@@ -113,7 +113,7 @@ def main():
                 lr /= 10
                 for param_group in optimizer.param_groups:
                     param_group['lr'] = lr
-            print('CHECK_IMPROVE Epoch: {}, Prec1 imporve: {1:.3f}, lr: {2:.4f}'.format(epoch, impv_prec1, lr))
+            print('CHECK_IMPROVE Epoch: {}, Prec1 imporve: {:.3f}, lr: {:.4f}'.format(epoch, impv_prec1, lr))
             impv_prec1 = 0
 
 #%% Training
