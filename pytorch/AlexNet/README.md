@@ -9,7 +9,6 @@ Slide: [AlexNet in PyTorch](https://docs.google.com/presentation/d/1EtflA3HRTNEQ
 
 TODO
 ---
-- Fix multi-processing problem for DataLoader
 - Implement LRN
 - Implement intensity augmentation
 - Model saving
