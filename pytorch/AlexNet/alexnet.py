@@ -138,6 +138,7 @@ def main():
                     param_group['lr'] = lr
             print('CHECK_IMPROVE Epoch: {}, Prec1 imporve: {:.3f}, lr: {:.8f}'.format(epoch, impv_prec1, lr))
             impv_prec1 = 0
+            
 #%% Training
 def train(train_loader, model, criterion, optimizer, is_gpu, device, epoch):
     # Profiler
