@@ -23,21 +23,21 @@ class AlexNet(nn.Module):
             nn.ReLU(),
             nn.LocalResponseNorm(5),
             nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(96, 128, kernel_size=5, padding=2),
+            nn.Conv2d(96, 256, kernel_size=5, padding=2),
             nn.ReLU(),
             nn.LocalResponseNorm(5),
             nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(128, 256, kernel_size=3, padding=1),
+            nn.Conv2d(256, 384, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(256, 256, kernel_size=3, padding=1),
+            nn.Conv2d(384, 384, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(256, 128, kernel_size=3, padding=1),
+            nn.Conv2d(384, 256, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=3, stride=2),
         )
         self.classifier = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(128 * 6 * 6, 4096),
+            nn.Linear(256 * 6 * 6, 4096),
             nn.ReLU(),
             nn.Dropout(),
             nn.Linear(4096, 4096),
@@ -47,7 +47,7 @@ class AlexNet(nn.Module):
 
     def forward(self, x):
         x = self.features(x)
-        x = x.view(-1, 128 * 6 * 6)
+        x = x.view(-1, 256 * 6 * 6)
         x = self.classifier(x)
         return x
 
