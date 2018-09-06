@@ -23,21 +23,21 @@ class AlexNet(nn.Module):
             nn.ReLU(),
             nn.LocalResponseNorm(5),
             nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(96, 256, kernel_size=5, padding=2),
+            nn.Conv2d(96, 128, kernel_size=5, padding=2),
             nn.ReLU(),
             nn.LocalResponseNorm(5),
             nn.MaxPool2d(kernel_size=3, stride=2),
-            nn.Conv2d(256, 384, kernel_size=3, padding=1),
+            nn.Conv2d(128, 256, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(384, 384, kernel_size=3, padding=1),
+            nn.Conv2d(256, 256, kernel_size=3, padding=1),
             nn.ReLU(),
-            nn.Conv2d(384, 256, kernel_size=3, padding=1),
+            nn.Conv2d(256, 128, kernel_size=3, padding=1),
             nn.ReLU(),
             nn.MaxPool2d(kernel_size=3, stride=2),
         )
         self.classifier = nn.Sequential(
             nn.Dropout(),
-            nn.Linear(256 * 6 * 6, 4096),
+            nn.Linear(128 * 6 * 6, 4096),
             nn.ReLU(),
             nn.Dropout(),
             nn.Linear(4096, 4096),
@@ -47,7 +47,7 @@ class AlexNet(nn.Module):
 
     def forward(self, x):
         x = self.features(x)
-        x = x.view(-1, 256 * 6 * 6)
+        x = x.view(-1, 128 * 6 * 6)
         x = self.classifier(x)
         return x
 
@@ -107,25 +107,37 @@ def main():
         criterion.to(device)
 
     ## Training
+    check_epoch = 10
     impv_prec1 = 0
     prev_prec1 = 0
+    best_prec1 = 0
     epochs = 200
     for epoch in range(epochs):
         train(train_loader, model, criterion, optimizer, is_gpu, device, epoch)
         prec1 = validate(val_loader, model, criterion, is_gpu, device)
 
+        # Save model if the precision is improved
+        if prec1 > best_prec1:
+            best_prec1 = prec1
+            torch.save({
+                'epoch': epoch + 1,
+                'state_dict': model.state_dict(),
+                'best_prec1': best_prec1,
+                'optimizer' : optimizer.state_dict(),
+            }, 'model_best.pth')
+    
         impv_prec1 += prec1 - prev_prec1
         prev_prec1 = prec1
 
         # Check acc improvement every 10 epoch
-        if epoch % 10 == 9:
+        if (epoch+1) % check_epoch == 0:
             if impv_prec1 < 1.0:
                 lr /= 10
+                check_epoch *= 2
                 for param_group in optimizer.param_groups:
                     param_group['lr'] = lr
-            print('CHECK_IMPROVE Epoch: {}, Prec1 imporve: {:.3f}, lr: {:.4f}'.format(epoch, impv_prec1, lr))
+            print('CHECK_IMPROVE Epoch: {}, Prec1 imporve: {:.3f}, lr: {:.8f}'.format(epoch, impv_prec1, lr))
             impv_prec1 = 0
-
 #%% Training
 def train(train_loader, model, criterion, optimizer, is_gpu, device, epoch):
     # Profiler
