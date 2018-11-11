@@ -1,16 +1,14 @@
-AlexNet in PyTorch
+GoogLeNet in PyTorch
 ===
 
-Most of the code are derivated from [examples/imagenet](https://github.com/pytorch/examples/tree/master/imagenet) and [torchvision/models/alexnet.py](https://github.com/pytorch/vision/blob/master/torchvision/models/alexnet.py).
+Most of the code are derivated from [examples/imagenet](https://github.com/pytorch/examples/tree/master/imagenet) and [pytorch-cifar/models/googlenet.py](https://github.com/kuangliu/pytorch-cifar/blob/master/models/googlenet.py).
 
-Paper: [ImageNet Classification with Deep Convolutional Neural Networks](https://papers.nips.cc/paper/4824-imagenet-classification-with-deep-convolutional-neural-networks.pdf)
+Paper: [Going Deeper with Convolutions](https://ai.google/research/pubs/pub43022)
 
-Slide: [AlexNet in PyTorch](https://docs.google.com/presentation/d/1EtflA3HRTNEQ5Yj5YKW6KOZ5it4HOHeDkztYbZQf-pw/edit?usp=sharing)
+Slide: [GoogLeNet](https://docs.google.com/presentation/d/1FTGpF2johkzj39vOvfHZMVLkpI4f9p8gl-srnUSsCS0/edit?usp=sharing)
 
 TODO
 ---
-- Model testing
 
 Note
 ---
-- Intensity augmentation is ignored

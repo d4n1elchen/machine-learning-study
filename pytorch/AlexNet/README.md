@@ -9,7 +9,6 @@ Slide: [AlexNet in PyTorch](https://docs.google.com/presentation/d/1EtflA3HRTNEQ
 
 TODO
 ---
-- Model testing
 
 Note
 ---
