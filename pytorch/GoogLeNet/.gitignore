@@ -1,0 +1,4 @@
+*.7z
+tiny-imagenet-200
+.ipynb_checkpoints
+*.pth
