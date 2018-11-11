@@ -42,7 +42,7 @@ def main():
     val_dataset = datasets.ImageFolder(valdir, val_transform)
 
     ## Prepare dataloader
-    batch_size = 128
+    batch_size = 64
     train_loader = torch.utils.data.DataLoader(
             train_dataset, batch_size=batch_size, shuffle=True,
             num_workers=4, pin_memory=True)
