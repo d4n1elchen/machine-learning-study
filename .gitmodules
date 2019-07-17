@@ -1,0 +1,3 @@
+[submodule "data-crawler/ptt/ptt-web-crawler"]
+	path = data-crawler/ptt/ptt-web-crawler
+	url = git@github.com:jwlin/ptt-web-crawler.git
