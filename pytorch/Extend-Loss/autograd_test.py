@@ -12,6 +12,7 @@ input2 = torch.Tensor([[1, 2],
                        [5, 2],
                        [2, 3],
                        [4, 5]])
+
 output = F.cosine_similarity(input1, input2)
 output_reduced = output.mean()
 

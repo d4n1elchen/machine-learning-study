@@ -124,3 +124,9 @@ Cosine loss
 * [torch.atan2](https://pytorch.org/docs/stable/torch.html#torch.atan2)
 
 It seems that dot cannot perform batch operation. Use `.view` and `.bmm` instead.
+
+`arctan` only works for 2-dimensional space. Dot product works for all dimension.
+
+autograd.Variable vs nn.Parameter
+---
+[What is the difference between autograd.Variable and nn.Parameter?](https://discuss.pytorch.org/t/what-is-the-difference-between-autograd-variable-and-nn-parameter/35934/2)
