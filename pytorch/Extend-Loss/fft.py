@@ -114,3 +114,64 @@ if __name__=="__main__":
 
     print("GRAD RE: ", re1.grad)
     print("GRAD IM: ", im1.grad)
+
+'''
+$ python fft.py
+INPUT0 RE 0:  tensor([1., 0., 0., 0., 0., 0., 0., 0., 0.], requires_grad=True)
+INPUT0 IM 0:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0.], requires_grad=True)
+
+INPUT1 RE:  tensor([ 1.0000e+00,  7.0711e-01,  6.1232e-17, -7.0711e-01, -1.0000e+00,
+        -7.0711e-01, -1.8370e-16,  7.0711e-01], requires_grad=True)
+INPUT1 IM:  tensor([ 0.0000e+00,  7.0711e-01,  1.0000e+00,  7.0711e-01,  1.2246e-16,
+        -7.0711e-01, -1.0000e+00, -7.0711e-01], requires_grad=True)
+
+INPUT2 RE:  tensor([ 1.0000e+00,  6.1232e-17, -1.0000e+00, -1.8370e-16,  1.0000e+00,
+         3.0616e-16, -1.0000e+00, -4.2863e-16], requires_grad=True)
+INPUT2 IM:  tensor([ 0.0000e+00,  1.0000e+00,  1.2246e-16, -1.0000e+00, -2.4493e-16,
+         1.0000e+00,  3.6739e-16, -1.0000e+00], requires_grad=True)
+
+INPUT1+INPUT2 RE 3:  tensor([ 2.0000,  0.7071, -1.0000, -0.7071,  0.0000, -0.7071, -1.0000,  0.7071],
+       requires_grad=True)
+INPUT1+INPUT2 IM 3:  tensor([ 0.0000e+00,  1.7071e+00,  1.0000e+00, -2.9289e-01, -1.2246e-16,
+         2.9289e-01, -1.0000e+00, -1.7071e+00], requires_grad=True)
+
+
+FFT0 RE:  tensor([1., 1., 1., 1., 1., 1., 1., 1., 1.], grad_fn=<FftBackward>)
+FFT0 IM:  tensor([0., 0., 0., 0., 0., 0., 0., 0., 0.], grad_fn=<FftBackward>)
+
+FFT1 RE 1:  tensor([-1.2246e-16,  8.0000e+00,  1.2246e-16,  0.0000e+00, -1.2246e-16,
+         6.8457e-08,  1.2246e-16,  0.0000e+00], grad_fn=<FftBackward>)
+FFT1 IM 1:  tensor([ 1.2246e-16, -3.6739e-16,  1.2246e-16,  1.2246e-16,  1.2246e-16,
+        -3.6739e-16,  1.2246e-16,  1.2246e-16], grad_fn=<FftBackward>)
+
+FFT2 RE:  tensor([-2.4493e-16, -5.9131e-16,  8.0000e+00,  5.9131e-16,  2.4493e-16,
+         1.0145e-16,  0.0000e+00, -1.0145e-16], grad_fn=<FftBackward>)
+FFT2 IM:  tensor([ 2.4493e-16,  2.4493e-16, -1.7145e-15,  2.4493e-16,  2.4493e-16,
+         2.4493e-16,  2.4493e-16,  2.4493e-16], grad_fn=<FftBackward>)
+
+FFT(1+2) RE:  tensor([ 0.0000e+00,  8.0000e+00,  8.0000e+00,  8.4294e-08,  0.0000e+00,
+        -1.5837e-08, -1.1921e-07, -8.4294e-08], grad_fn=<FftBackward>)
+FFT(1+2) IM:  tensor([-1.2246e-16,  1.2246e-16, -1.2246e-16,  1.2246e-16, -1.2246e-16,
+         1.2246e-16, -1.2246e-16,  1.2246e-16], grad_fn=<FftBackward>)
+
+FFT1+FFT2 RE:  tensor([-3.6739e-16,  8.0000e+00,  8.0000e+00,  5.9131e-16,  1.2246e-16,
+         6.8457e-08,  1.2246e-16, -1.0145e-16], grad_fn=<AddBackward0>)
+FFT1+FFT2 IM:  tensor([ 3.6739e-16, -1.2246e-16, -1.5920e-15,  3.6739e-16,  3.6739e-16,
+        -1.2246e-16,  3.6739e-16,  3.6739e-16], grad_fn=<AddBackward0>)
+
+
+FFT1 MAG:  tensor([1.7319e-16, 8.0000e+00, 1.7319e-16, 1.2246e-16, 1.7319e-16, 6.8457e-08,
+        1.7319e-16, 1.2246e-16], grad_fn=<SqrtBackward>)
+FFT2 MAG:  tensor([3.4638e-16, 6.4003e-16, 8.0000e+00, 6.4003e-16, 3.4638e-16, 2.6511e-16,
+        2.4493e-16, 2.6511e-16], grad_fn=<SqrtBackward>)
+FFT(1+2) MAG:  tensor([1.2246e-16, 8.0000e+00, 8.0000e+00, 8.4294e-08, 1.2246e-16, 1.5837e-08,
+        1.1921e-07, 8.4294e-08], grad_fn=<SqrtBackward>)
+FFT1+FFT2 MAG:  tensor([5.1957e-16, 8.0000e+00, 8.0000e+00, 6.9615e-16, 3.8727e-16, 6.8457e-08,
+        3.8727e-16, 3.8114e-16], grad_fn=<SqrtBackward>)
+
+FFT MAG AVG:  tensor(1., grad_fn=<MeanBackward0>)
+GRAD RE:  tensor([ 2.5000e-01,  4.7436e-10, -6.0355e-01,  4.7436e-10, -2.5000e-01,
+        -4.7436e-10, -1.0355e-01, -4.7436e-10])
+GRAD IM:  tensor([ 6.0355e-01,  4.7436e-10, -2.5000e-01, -4.7436e-10,  1.0355e-01,
+        -4.7436e-10,  2.5000e-01,  4.7436e-10])
+'''
