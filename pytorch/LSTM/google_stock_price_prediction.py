@@ -1,12 +1,13 @@
 # Adapted from: https://github.com/thundercomb/pytorch-stock-predictor-rnn/blob/master/pytorch-stock-predictor-rnn.py
-
+#%%
 # Importing the libraries
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
 # Globals
-INPUT_SIZE = 20
+LOOKBACK_SIZE = 20
+INPUT_SIZE = 2
 HIDDEN_SIZE = 64
 NUM_LAYERS = 2
 OUTPUT_SIZE = 1
@@ -16,25 +17,36 @@ learning_rate = 0.001
 num_epochs = 100
 
 # Importing the training set
-dataset_train = pd.read_csv('Google_Stock_Price_Train.csv')
-training_set = dataset_train.iloc[:,1:2].values
+dataset_train = pd.read_csv('Google_Stock_Price_Train.csv',thousands=',')
+training_set = dataset_train.iloc[:,1:5].values
 
-# Feature Scaling
+#%%
+# Visualising the training set
+plt.plot(training_set[:, 0], color = 'red', label = 'Real Google Stock Price')
+plt.title('Google Stock Price Training data')
+plt.xlabel('Time')
+plt.ylabel('Google Stock Price')
+plt.legend()
+plt.show()
+
+# Feature Scaler
 from sklearn.preprocessing import MinMaxScaler
-sc = MinMaxScaler(feature_range = (0, 1))
-training_set_scaled = sc.fit_transform(training_set)
+sc_X = MinMaxScaler(feature_range = (0, 1))
+sc_y = MinMaxScaler(feature_range = (0, 1))
+# Scaling
+training_set_scaled_X = sc_X.fit_transform(training_set[:, 1:3])
+training_set_scaled_y = sc_y.fit_transform(training_set[:, 0:1])
 
-# Creating a data structure with INPUT_SIZE timesteps and t+1 output
+# Creating a data structure with LOOKBACK_SIZE timesteps and t+1 output
 X_train = []
 y_train = []
-for i in range(INPUT_SIZE, 1258):
-    X_train.append(training_set_scaled[i-INPUT_SIZE:i, 0])
-    y_train.append(training_set_scaled[i, 0])
+for i in range(LOOKBACK_SIZE, 1258):
+    X_train.append(training_set_scaled_X[i-LOOKBACK_SIZE:i])
+    y_train.append(training_set_scaled_y[i])
 X_train, y_train = np.array(X_train), np.array(y_train)
 
 # Reshaping
-X_train = np.reshape(X_train, (X_train.shape[0], 1, X_train.shape[1]))
-
+X_train = np.swapaxes(X_train, 0, 1)
 
 
 # Importing the PyTorch libraries and packages
@@ -76,9 +88,10 @@ for epoch in range(num_epochs):
     inputs = Variable(torch.from_numpy(X_train).float())
     labels = Variable(torch.from_numpy(y_train).float())
 
-    output, hidden_state = model(inputs, hidden_state)
+    for i in range(LOOKBACK_SIZE):
+        output, hidden_state = model(inputs[i, :, :].view(1, -1, INPUT_SIZE), hidden_state)
 
-    loss = criterion(output.view(-1), labels)
+    loss = criterion(output, labels)
     optimiser.zero_grad()
     loss.backward(retain_graph=True) # back propagation
     optimiser.step()                 # update the parameters
@@ -89,27 +102,29 @@ for epoch in range(num_epochs):
 
 
 # Getting the real stock price for February 1st 2012 - January 31st 2017
-dataset_test = pd.read_csv('Google_Stock_Price_Test.csv')
-test_set = dataset_test.iloc[:,1:2].values
+dataset_test = pd.read_csv('Google_Stock_Price_Test.csv',thousands=',')
+test_set = dataset_test.iloc[:,1:5].values
 real_stock_price = np.concatenate((training_set[0:1258], test_set), axis = 0)
 
 # Getting the predicted stock price of 2017
-scaled_real_stock_price = sc.fit_transform(real_stock_price)
+scaled_real_stock_price_X = sc_X.fit_transform(real_stock_price[:, 1:3])
+
 X_test = []
 for i in range(1258, 1278):
-    X_test.append(scaled_real_stock_price[i-INPUT_SIZE:i, 0])
+    X_test.append(scaled_real_stock_price_X[i-LOOKBACK_SIZE:i])
 X_test = np.array(X_test)
-X_test = np.reshape(X_test, (X_test.shape[0], 1, X_test.shape[1]))
+X_test = np.swapaxes(X_test, 0, 1)
 
-inputs = np.concatenate((X_train, X_test),axis=0)
+inputs = np.concatenate((X_train, X_test),axis=1)
 inputs = Variable(torch.from_numpy(inputs).float())
 hidden_state = None
-predicted_stock_price, hidden_state = model(inputs, hidden_state)
-predicted_stock_price = np.reshape(predicted_stock_price.detach().numpy(), (inputs.shape[0], 1))
-predicted_stock_price = sc.inverse_transform(predicted_stock_price)
+for i in range(LOOKBACK_SIZE):
+    predicted_stock_price, hidden_state = model(inputs[i, :, :].view(1, -1, INPUT_SIZE), hidden_state)
+predicted_stock_price = np.reshape(predicted_stock_price.detach().numpy(), (-1, 1))
+predicted_stock_price = sc_y.inverse_transform(predicted_stock_price)
 
 # Visualising the results
-plt.plot(real_stock_price, color = 'red', label = 'Real Google Stock Price')
+plt.plot(real_stock_price[:, 0], color = 'red', label = 'Real Google Stock Price')
 plt.plot(predicted_stock_price, color = 'blue', label = 'Predicted Google Stock Price')
 plt.title('Google Stock Price Prediction')
 plt.xlabel('Time')
