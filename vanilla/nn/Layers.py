@@ -1,8 +1,10 @@
+import abc
 import numpy as np
 np.random.seed(0)
 
 eps = 1e-8
 
+# Extend np.ndarray for storing grads
 class Parameter(np.ndarray):
 
     def __new__(cls, input_array):
@@ -22,13 +24,23 @@ class Parameter(np.ndarray):
     def grad(self, grad):
         self._grad = grad
 
-class Layer:
+class Layer(abc.ABC):
 
     def __init__(self):
         self.param = []
 
     def __call__(self, x):
         return self.forward(x)
+ 
+    @abc.abstractmethod
+    def forward(self):
+        'Return feedfoward result'
+        return NotImplemented
+ 
+    @abc.abstractmethod
+    def backward(self):
+        'Return gradient of the layer'
+        return NotImplemented
 
 class Linear(Layer):
 
