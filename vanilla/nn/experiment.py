@@ -38,8 +38,9 @@ def accuracy(out, label):
 
 trial_size = 10000
 
+# Iterate through training dataset every `trial_size` data
 for t in range(0, n_data, trial_size):
-    print("Start trial", t)
+    print("Start trial", t / n_data)
     trial_image = image[t:min(t + trial_size, n_data), :]
     trial_label_onehot = label_onehot[t:min(t + trial_size, n_data), :]
 
