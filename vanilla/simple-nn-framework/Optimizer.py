@@ -1,8 +1,20 @@
+import abc
 import numpy as np
 
 eps = 1e-8
 
-class SGD:
+class Optimizer(abc.ABC):
+
+    def update(self, layer):
+        delta = self.update_amount(layer)
+        layer.update(*delta)
+ 
+    @abc.abstractmethod
+    def update_amount(self):
+        'Return update amount'
+        return NotImplemented
+
+class SGD(Optimizer):
 
     def __init__(self, lr = 1, clipnorm = 1.0):
         self.lr = lr
@@ -25,7 +37,7 @@ class SGD:
             d.append(-g * self.lr)
         return tuple(d)
 
-class Adam:
+class Adam(Optimizer):
 
     def __init__(self, lr = 0.1, clipnorm = 1.0):
         self.clipnorm = clipnorm
@@ -59,7 +71,7 @@ class Adam:
         
         return tuple(d)
 
-class Momentum:
+class Momentum(Optimizer):
 
     def __init__(self, lr = 0.1, clipnorm = 1.0):
         self.clipnorm = clipnorm
@@ -85,7 +97,7 @@ class Momentum:
         
         return tuple(d)
 
-class AdaGrad:
+class AdaGrad(Optimizer):
 
     def __init__(self, lr = 0.1, clipnorm = 1.0):
         self.clipnorm = clipnorm

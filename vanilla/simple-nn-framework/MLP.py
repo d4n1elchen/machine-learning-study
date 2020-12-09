@@ -46,17 +46,18 @@ class MLP:
     # Loss function
     def loss(self, y):
         return self.criteria(self.out, y)
-    
-    # Update parameters by backpropagation
-    def update(self):
+
+    # Calculate grad by backpropagation
+    def backward(self):
         dloss = self.criteria.backward()
         dsm = self.softmax.backward(dloss)
         di = self.linear[self.n_layers].backward(dsm)
-        dw_update, db_update = self.optimizer.update_amount(self.linear[self.n_layers])
-        self.linear[self.n_layers].update(dw_update, db_update)
 
         for i in reversed(range(self.n_layers)):
             ds = self.sigmoid[i].backward(di)
             di = self.linear[i].backward(ds)
-            dw_update, db_update = self.optimizer.update_amount(self.linear[i])
-            self.linear[i].update(dw_update, db_update)
+    
+    # Update parameters
+    def update(self):
+        for layer in self.linear:
+            self.optimizer.update(layer)

@@ -52,6 +52,7 @@ for t in range(0, n_data, trial_size):
 
             out = mlp.forward(batch_image)
             loss = mlp.loss(batch_label_onehot)
+            mlp.backward()
             mlp.update()
 
         out = mlp.forward(image_test)

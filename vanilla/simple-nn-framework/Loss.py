@@ -1,8 +1,9 @@
+import Layers
 import numpy as np
 
 eps = 1e-8
 
-class Loss:
+class Loss(Layers.Layer):
 
     def __call__(self, out, y):
         return self.forward(out, y)
